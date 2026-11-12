@@ -64,9 +64,9 @@ export default {
       if (!env.DB) return json({ error: "Missing D1 binding env.DB" }, 500);
 
       const adminHeader = request.headers.get("X-Admin-Token") || "";
-      if (env.ADMIN_TOKEN && adminHeader !== env.ADMIN_TOKEN) {
+      if (!env.ADMIN_TOKEN || adminHeader !== env.ADMIN_TOKEN) {
         return json({ error: "Unauthorized admin" }, 401);
-      }
+       }
 
       const body = await readJsonBody();
       if (!body?.username || !body?.password) {
@@ -189,7 +189,7 @@ export default {
     if (url.pathname === "/gemini" || url.pathname === "/") {
       // auth do proxy (igual ao seu Worker atual)
       const auth = request.headers.get("Authorization") || "";
-      if (env.CLIENT_TOKEN && auth !== `Bearer ${env.CLIENT_TOKEN}`) {
+      if (!env.CLIENT_TOKEN || auth !== `Bearer ${env.CLIENT_TOKEN}`) {
         return json({ error: "Unauthorized" }, 401);
       }
       if (!env.GEMINI_API_KEY) return json({ error: "Missing GEMINI_API_KEY" }, 500);
